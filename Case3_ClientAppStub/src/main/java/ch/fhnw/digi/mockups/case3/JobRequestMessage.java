@@ -5,6 +5,11 @@ public class JobRequestMessage {
 	private String jobnumber;
 	private String requestingEmployee;
 
+	public JobRequestMessage(String jobnumber, String requestingEmployee) {
+		this.jobnumber = jobnumber;
+		this.requestingEmployee = requestingEmployee;
+	}
+
 	public String getJobnumber() {
 		return jobnumber;
 	}
