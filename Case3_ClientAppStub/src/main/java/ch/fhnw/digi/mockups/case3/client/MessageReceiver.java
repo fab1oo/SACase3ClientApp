@@ -2,9 +2,11 @@ package ch.fhnw.digi.mockups.case3.client;
 
 import javax.jms.ConnectionFactory;
 
+import ch.fhnw.digi.mockups.case3.JobRequestMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jms.DefaultJmsListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
@@ -21,8 +23,12 @@ public class MessageReceiver {
 	// FIXME: Nachrichten Empfangen und an das GUI weitergeben 
 	// @see ui.addJobToList()
 	// @see ui.assignJob()
-	
-	
+
+	@JmsListener(destination = "greetRequests", containerFactory = "myFactory")
+	public void receiveMessage(JobRequestMessage c) {
+
+
+	}
 	
 	
 	
