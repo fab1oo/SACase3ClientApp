@@ -21,7 +21,6 @@ import javax.jms.ConnectionFactory;
 @Component
 public class MessageSender {
 
-
 	@Autowired
 	private JmsTemplate jmsTemplate;
 	@Autowired
@@ -40,30 +39,20 @@ public class MessageSender {
 			m.setJMSCorrelationID(jobNumber);
 			return m;
 		});
-
 	}
 
+	public void sendRepairJob(JobMessage jm) {
+		jmsTemplate.setMessageConverter(jacksonJmsMessageConverter);
+		jmsTemplate.setPubSubDomain(true); // we want to send to a topic, not a queue
 
-	@Bean
-	public JmsListenerContainerFactory<?> myFactory2(ConnectionFactory connectionFactory,
-													DefaultJmsListenerContainerFactoryConfigurer configurer) {
-		DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-		// This provides all boot's default to this factory, including the message
-		// converter
-		configurer.configure(factory, connectionFactory);
-		factory.setPubSubDomain(true);
-		factory.setMessageConverter(jacksonJmsMessageConverter);
+		final String jobNumber = "message" + jm.getJobnumber();
 
-		// You could still override some of Boot's default if necessary.
-		return factory;
+		// publish a new JobMessage to the channel "group8.dispo.jobs.repair"
+		jmsTemplate.convertAndSend("group8.dispo.jobs.repair\t", jm, m -> {
+			m.setStringProperty("someHeaderField", "someImportantValue");
+			m.setJMSCorrelationID(jobNumber);
+			return m;
+		});
 	}
-
-	// used to convert our java messagage object into a JSON String that can be sent
-	/*public MessageConverter jacksonJmsMessageConverter2() {
-		MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
-		converter.setTargetType(MessageType.TEXT);
-		converter.setTypeIdPropertyName("_type");
-		return converter;
-	}*/
 
 }

@@ -21,9 +21,18 @@ public class MessageReceiver {
 	@Autowired
 	private UI ui;
 
+	@Autowired
+	private MessageSender messageSender;
+
 	@JmsListener(destination = "dispo.jobs.new", containerFactory = "myFactory")
 	public void getJobMessage(JobMessage jm) {
-		ui.addJobToList(jm);
+		// If urgent repair job, then send direct to repair topic
+		if (jm.getType() == JobMessage.JobType.Repair) {
+			messageSender.sendRepairJob(jm);
+		} else {
+			ui.addJobToList(jm);
+		}
+
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
