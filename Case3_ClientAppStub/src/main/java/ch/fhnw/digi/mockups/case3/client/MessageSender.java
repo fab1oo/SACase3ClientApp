@@ -43,7 +43,7 @@ public class MessageSender {
 
 	public void sendRepairJob(JobMessage jm) {
 		jmsTemplate.setMessageConverter(jacksonJmsMessageConverter);
-		jmsTemplate.setPubSubDomain(true); // we want to send to a topic, not a queue
+		jmsTemplate.setPubSubDomain(false); // we want to send to a queue, not a topic
 
 		final String jobNumber = "message" + jm.getJobnumber();
 

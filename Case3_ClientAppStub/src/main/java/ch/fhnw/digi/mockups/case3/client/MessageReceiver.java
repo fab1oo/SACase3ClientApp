@@ -26,7 +26,7 @@ public class MessageReceiver {
 
 	@JmsListener(destination = "dispo.jobs.new", containerFactory = "myFactory")
 	public void getJobMessage(JobMessage jm) {
-		// If urgent repair job, then send direct to repair topic
+		// If urgent repair job, then send direct to repair queue
 		if (jm.getType() == JobMessage.JobType.Repair) {
 			messageSender.sendRepairJob(jm);
 		} else {
